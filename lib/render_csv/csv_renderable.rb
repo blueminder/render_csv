@@ -19,7 +19,10 @@ module RenderCsv
       CSV.generate(encoding: 'utf-8') do |row|
         row << columns
         self.each do |obj|
-          row << columns.map { |c| obj.send(c) }
+          row << columns.map { |c| 
+              cell = obj.send(c)
+              cell.is_a?(String) ? CGI.unescapeHTML(cell).gsub(/"/, "'") : cell
+          }
         end
       end
     end
